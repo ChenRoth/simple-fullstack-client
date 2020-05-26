@@ -1,4 +1,4 @@
-import {IAction, ActionType} from './store';
+import { IAction, ActionType } from './store';
 import { Dispatch } from 'redux';
 import axios from 'axios';
 
@@ -22,13 +22,25 @@ export const getCounterActionSync = () => {
 // when dispatch receives this function, it calls the function and passes ITSELF (dispatch) to the function
 export const getCounterAction = () => {
     return async (dispatch: Dispatch<IAction>) => {
-        const {data} = await axios.get<IGetCounterResponse>('http://localhost:4000/counter');
-        const {counter} = data;
         dispatch({
-            type: ActionType.GetCounterSuccess,
-            payload: {
-                counter,
-            }
+            type: ActionType.GetCounterPending,
+            payload: {},
         });
+
+        try {
+            const { data } = await axios.get<IGetCounterResponse>('http://localhost:4000/counter');
+            const { counter } = data;
+            dispatch({
+                type: ActionType.GetCounterSuccess,
+                payload: {
+                    counter,
+                }
+            });
+        } catch (e) {
+            dispatch({
+                type: ActionType.GetCounterFail,
+                payload: {}
+            });
+        }
     };
 }

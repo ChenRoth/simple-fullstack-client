@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { State } from '../../store';
-import { getCounterAction, getCounterActionSync } from '../../actions';
+import { getCounterAction } from '../../actions';
 
 interface ICounterReaderProps {
     getValue(): void;
-    value: number;
+    isLoading: boolean;
+    value: number | null;
 }
 
 class _CounterReader extends React.Component<ICounterReaderProps> {
@@ -15,7 +16,19 @@ class _CounterReader extends React.Component<ICounterReaderProps> {
     }
 
     render() {
-        const { value } = this.props;
+        const { value, isLoading } = this.props;
+        if (isLoading) {
+            return (
+                <div>Fetching data from server...</div>
+            );
+        }
+
+        if (value === null) {
+            return (
+                <div>Error getting data</div>
+            )
+        }
+
         return (
             <div>
                 Current value is {value}
@@ -27,6 +40,7 @@ class _CounterReader extends React.Component<ICounterReaderProps> {
 const mapStateToProps = (state: State) => {
     return {
         value: state.counter,
+        isLoading: state.isCounterLoading,
     };
 }
 

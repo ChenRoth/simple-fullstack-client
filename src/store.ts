@@ -4,11 +4,13 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 export interface State {
-    counter: number;
+    isCounterLoading: boolean;
+    counter: number | null;
 }
 
 const initialState: State = {
-    counter: 0,
+    isCounterLoading: false,
+    counter: null,
 }
 
 export interface IAction {
@@ -22,13 +24,28 @@ export enum ActionType {
     GetCounterFail = 'GET_COUNTER_FAIL',
 }
 
-const reducer = (state = initialState, action: IAction) => {
+const reducer = (state = initialState, action: IAction): State => {
     switch (action.type) {
+        case ActionType.GetCounterPending: {
+            return {
+                ...state,
+                isCounterLoading: true,
+            }
+        }
+
         case ActionType.GetCounterSuccess: {
             const { counter } = action.payload
             return {
                 ...state,
                 counter,
+                isCounterLoading: false,
+            }
+        }
+
+        case ActionType.GetCounterFail: {
+            return {
+                ...state,
+                isCounterLoading: false,
             }
         }
 
