@@ -22,6 +22,9 @@ export enum ActionType {
     GetCounterPending = 'GET_COUNTER_PENDING',
     GetCounterSuccess = 'GET_COUNTER_SUCCESS',
     GetCounterFail = 'GET_COUNTER_FAIL',
+    PutCounterPending = 'PUT_COUNTER_PENDING',
+    PutCounterSuccess = 'PUT_COUNTER_SUCCESS',
+    PutCounterFail = 'PUT_COUNTER_FAIL',
 }
 
 const reducer = (state = initialState, action: IAction): State => {
@@ -46,6 +49,14 @@ const reducer = (state = initialState, action: IAction): State => {
             return {
                 ...state,
                 isCounterLoading: false,
+            }
+        }
+
+        case ActionType.PutCounterSuccess: {
+            const { counter } = action.payload
+            return {
+                ...state,
+                counter,
             }
         }
 

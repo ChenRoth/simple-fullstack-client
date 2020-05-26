@@ -44,3 +44,27 @@ export const getCounterAction = () => {
         }
     };
 }
+
+export const putCounterAction = (value: number) => {
+    return async (dispatch: Dispatch<IAction>) => {
+        dispatch({
+            type: ActionType.PutCounterPending,
+            payload: {},
+        });
+
+        try {
+            await axios.put('http://localhost:4000/counter', {value});
+            dispatch({
+                type: ActionType.PutCounterSuccess,
+                payload: {
+                    counter: value,
+                }
+            });
+        } catch (e) {
+            dispatch({
+                type: ActionType.PutCounterFail,
+                payload: {}
+            });
+        }
+    };
+}
