@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FormEvent, ChangeEvent } from 'react';
 import { connect } from 'react-redux';
 import { putCounterAction } from '../../actions';
 
@@ -6,13 +6,39 @@ interface ICounterWriterProps {
     setValue(value: number): void;
 }
 
-class _CounterWriter extends React.Component<ICounterWriterProps> {
+interface ICounterWriterState {
+    newValue: number;
+}
+
+class _CounterWriter extends React.Component<ICounterWriterProps, ICounterWriterState> {
+    state = {
+        newValue: 0,
+    }
+
     render() {
-        const {setValue} = this.props;
+        const { newValue } = this.state;
 
         return (
-            <button onClick={() => setValue(10)}>SET COUNTER</button>
+            <form onSubmit={this.handleSubmit}>
+                <input value={newValue} onChange={this.onChangeValue} type="number" />
+                <button type="submit">SET COUNTER</button>
+            </form>
+
         )
+    }
+
+    onChangeValue = (e: ChangeEvent<HTMLInputElement>) => {
+        const value = Number(e.target.value);
+        this.setState({
+            newValue: value,
+        });
+    }
+
+    handleSubmit = (e: FormEvent) => {
+        const { setValue } = this.props;
+        const { newValue } = this.state;
+        e.preventDefault();
+        setValue(newValue);
     }
 }
 
